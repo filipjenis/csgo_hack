@@ -169,5 +169,6 @@ int main() {
 
 		if (GetAsyncKeyState(VK_MENU) && closestw2shead.z >= 0.001f && closest != 32)
 			SetCursorPos(closestw2shead.x, closestw2shead.y); 
+			Sleep(20);
 	}
 }
