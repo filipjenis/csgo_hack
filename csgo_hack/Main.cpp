@@ -157,18 +157,18 @@ void FindClosestEnemyThread() {
 int main() {
 	hwnd = FindWindowA(NULL, "Counter-Strike: Global Offensive");
 	GetWindowThreadProcessId(hwnd, &procId);
-	moduleBase = GetModuleBaseAddress("client_panorama.dll"); 
+	moduleBase = GetModuleBaseAddress("client_panorama.dll");
 	hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, procId);
 	hdc = GetDC(hwnd);
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)FindClosestEnemyThread, NULL, NULL, NULL);
 
-	while (!GetAsyncKeyState(VK_END)) { 
+	while (!GetAsyncKeyState(VK_END)) {
 		vm = RPM<view_matrix_t>(moduleBase + dwViewMatrix);
 		Vector3 closestw2shead = WorldToScreen(get_head(GetPlayer(closest)), vm);
-		//DrawLine(xhairx, xhairy, closestw2shead.x, closestw2shead.y)
+		//DrawLine(xhairx, xhairy, closestw2shead.x, closestw2shead.y); 
 
-		if (GetAsyncKeyState(VK_MENU) && closestw2shead.z >= 0.001f && closest != 32)
-			SetCursorPos(closestw2shead.x, closestw2shead.y); 
+		if (GetAsyncKeyState(VK_MENU) && closestw2shead.z >= 0.001f && closest != 32 )
+			SetCursorPos(closestw2shead.x, closestw2shead.y);
 			Sleep(20);
 	}
 }
