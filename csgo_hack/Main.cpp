@@ -19,7 +19,7 @@ DWORD procId;
 HANDLE hProcess;
 uintptr_t moduleBase;
 HDC hdc;
-int closest; //Used in a thread to save CPU usage.
+int closest; 
 
 uintptr_t GetModuleBaseAddress(const char* modName) {
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
@@ -59,15 +59,15 @@ uintptr_t GetLocalPlayer() {
 	return RPM< uintptr_t>(moduleBase + dwLocalPlayer);
 }
 
-uintptr_t GetPlayer(int index) {  //Each player has an index. 1-64
-	return RPM< uintptr_t>(moduleBase + dwEntityList + index * 0x10); //We multiply the index by 0x10 to select the player we want in the entity list.
+uintptr_t GetPlayer(int index) {  
+	return RPM< uintptr_t>(moduleBase + dwEntityList + index * 0x10); 
 }
 
 int GetPlayerHealth(uintptr_t player) {
 	return RPM<int>(player + m_iHealth);
 }
 
-Vector3 PlayerLocation(uintptr_t player) { //Stores XYZ coordinates in a Vector3.
+Vector3 PlayerLocation(uintptr_t player) { 
 	return RPM<Vector3>(player + m_vecOrigin);
 }
 
@@ -93,7 +93,7 @@ struct view_matrix_t {
 	float matrix[16];
 } vm;
 
-struct Vector3 WorldToScreen(const struct Vector3 pos, struct view_matrix_t matrix) { //This turns 3D coordinates (ex: XYZ) int 2D coordinates (ex: XY).
+struct Vector3 WorldToScreen(const struct Vector3 pos, struct view_matrix_t matrix) { 
 	struct Vector3 out;
 	float _x = matrix.matrix[0] * pos.x + matrix.matrix[1] * pos.y + matrix.matrix[2] * pos.z + matrix.matrix[3];
 	float _y = matrix.matrix[4] * pos.x + matrix.matrix[5] * pos.y + matrix.matrix[6] * pos.z + matrix.matrix[7];
@@ -121,7 +121,7 @@ int FindClosestEnemy() {
 	Vector3 Calc = { 0, 0, 0 };
 	float Closest = FLT_MAX;
 	int localTeam = getTeam(GetLocalPlayer());
-	for (int i = 1; i < 64; i++) { //Loops through all the entitys in the index 1-64.
+	for (int i = 1; i < 64; i++) { 
 		DWORD Entity = GetPlayer(i);
 		int EnmTeam = getTeam(Entity); if (EnmTeam == localTeam) continue;
 		int EnmHealth = GetPlayerHealth(Entity); if (EnmHealth < 1 || EnmHealth > 100) continue;
@@ -136,13 +136,13 @@ int FindClosestEnemy() {
 	}
 }
 
-void DrawLine(float StartX, float StartY, float EndX, float EndY) { //This function is optional for debugging.
+void DrawLine(float StartX, float StartY, float EndX, float EndY) { 
 	int a, b = 0;
 	HPEN hOPen;
 	HPEN hNPen = CreatePen(PS_SOLID, 2, 0x0000FF);
 	hOPen = (HPEN)SelectObject(hdc, hNPen);
-	MoveToEx(hdc, StartX, StartY, NULL); //start of line
-	a = LineTo(hdc, EndX, EndY); //end of line
+	MoveToEx(hdc, StartX, StartY, NULL); 
+	a = LineTo(hdc, EndX, EndY); 
 	DeleteObject(SelectObject(hdc, hOPen));
 }
 
@@ -160,12 +160,12 @@ int main() {
 	hdc = GetDC(hwnd);
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)FindClosestEnemyThread, NULL, NULL, NULL);
 
-	while (!GetAsyncKeyState(VK_END)) { //press the "end" key to end the hack
+	while (!GetAsyncKeyState(VK_END)) { 
 		vm = RPM<view_matrix_t>(moduleBase + dwViewMatrix);
 		Vector3 closestw2shead = WorldToScreen(get_head(GetPlayer(closest)), vm);
-		//DrawLine(xhairx, xhairy, closestw2shead.x, closestw2shead.y); //optinal for debugging
+		//DrawLine(xhairx, xhairy, closestw2shead.x, closestw2shead.y)
 
 		if (GetAsyncKeyState(VK_MENU) && closestw2shead.z >= 0.001f && closest != 32)
-			SetCursorPos(closestw2shead.x, closestw2shead.y); //turn off "raw input" in CSGO settings
+			SetCursorPos(closestw2shead.x, closestw2shead.y); 
 	}
 }
