@@ -3,13 +3,15 @@
 #include <TlHelp32.h>
 #include "Offsets.h"
 
-#define dwLocalPlayer 0xD30B94
-#define dwEntityList 0x4D44A24
+/*
+#define dwLocalPlayer 0xD2FB84
+#define dwEntityList 0x4D43AB4
 #define m_dwBoneMatrix 0x26A8
 #define m_iTeamNum 0xF4
 #define m_iHealth 0x100
 #define m_vecOrigin 0x138
 #define m_bDormant 0xED
+*/
 
 const int SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN); const int xhairx = SCREEN_WIDTH / 2;
 const int SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN); const int xhairy = SCREEN_HEIGHT / 2;
